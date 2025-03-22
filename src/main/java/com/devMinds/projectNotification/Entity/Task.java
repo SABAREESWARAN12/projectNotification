@@ -9,7 +9,18 @@ public class Task {
     private String taskSubject;
     private String taskDesc;
     private String status;
-    private String isEnabledNotification;
+    private boolean isEnabledNotification;
+
+    public Task() {
+    }
+
+    public Task(String taskId, String taskSubject, String taskDesc, String status, boolean isEnabledNotification) {
+        this.taskId = taskId;
+        this.taskSubject = taskSubject;
+        this.taskDesc = taskDesc;
+        this.status = status;
+        this.isEnabledNotification = isEnabledNotification;
+    }
 
     public String getTaskId() {
         return taskId;
@@ -43,11 +54,11 @@ public class Task {
         this.status = status;
     }
 
-    public String getIsEnabledNotification() {
+    public boolean getIsEnabledNotification() {
         return isEnabledNotification;
     }
 
-    public void setIsEnabledNotification(String isEnabledNotification) {
+    public void setIsEnabledNotification(boolean isEnabledNotification) {
         this.isEnabledNotification = isEnabledNotification;
     }
 }

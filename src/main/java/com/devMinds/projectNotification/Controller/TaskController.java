@@ -1,24 +1,53 @@
 package com.devMinds.projectNotification.Controller;
 
+import com.devMinds.projectNotification.Dto.TaskDTO;
 import com.devMinds.projectNotification.Entity.Task;
-import com.devMinds.projectNotification.Repository.TaskRepository;
 import com.devMinds.projectNotification.Service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
+import java.util.List;
 
-@RestController
+@Controller
+@RequestMapping("/Task/v1")
+@SessionAttributes("applicant")
 public class TaskController {
     @Autowired
     private TaskService service;
 
-    @PostMapping("createTask")
-    public ResponseEntity createTask(Principal principal,  @RequestBody Task task) {
-        return service.createTask(task, principal.getName());
+    @RequestMapping("createTask")
+    public String taskTemplate(ModelMap modelMap) {
+        modelMap.addAttribute("task", new Task());
+        modelMap.addAttribute("action", "/Task/v1/add");
+        return "TASK/taskCreation";
+    }
+
+    @RequestMapping("editTask")
+    public String taskEditTemplate(OAuth2AuthenticationToken token, ModelMap modelMap,
+                                   @RequestParam String id) {
+        modelMap.addAttribute("task", service.getTaskById(
+                id, token.getPrincipal().getAttribute("email")));
+        modelMap.addAttribute("action", "/Task/v1/edit");
+        return "TASK/taskCreation";
+    }
+
+    @RequestMapping("add")
+    public String addTask(OAuth2AuthenticationToken token, @ModelAttribute Task task, ModelMap modelMap) {
+        service.modifyTask(task, token.getPrincipal().getAttribute("email"));
+        List<TaskDTO> taskDTOList = service.getTaskDto(token.getPrincipal().getAttributes().get("email").toString());
+        modelMap.addAttribute("task", taskDTOList);
+        return "redirect:/dashboard";
+    }
+
+    @GetMapping("remove")
+    public String deleteTask(OAuth2AuthenticationToken token,
+                                     @RequestParam String id, ModelMap modelMap) {
+        service.deleteTask(id, token.getPrincipal().getAttribute("email"));
+        List<TaskDTO> taskDTOList = service.getTaskDto(token.getPrincipal().getAttributes().get("email").toString());
+        modelMap.addAttribute("task", taskDTOList);
+        return "redirect:/dashboard";
     }
 }

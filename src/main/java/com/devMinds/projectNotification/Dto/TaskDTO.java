@@ -4,12 +4,12 @@ public class TaskDTO {
     private String taskName;
     private String taskSubject;
     private String taskStatus;
-    private String isEnabledNotification;
+    private boolean isEnabledNotification;
 
     public TaskDTO() {
     }
 
-    public TaskDTO(String taskName, String taskSubject, String taskStatus, String isEnabledNotification) {
+    public TaskDTO(String taskName, String taskSubject, String taskStatus, boolean isEnabledNotification) {
         this.taskName = taskName;
         this.taskSubject = taskSubject;
         this.taskStatus = taskStatus;
@@ -40,11 +40,11 @@ public class TaskDTO {
         this.taskStatus = taskStatus;
     }
 
-    public String getIsEnabledNotification() {
+    public boolean getIsEnabledNotification() {
         return isEnabledNotification;
     }
 
-    public void setIsEnabledNotification(String isEnabledNotification) {
+    public void setIsEnabledNotification(boolean isEnabledNotification) {
         this.isEnabledNotification = isEnabledNotification;
     }
 }

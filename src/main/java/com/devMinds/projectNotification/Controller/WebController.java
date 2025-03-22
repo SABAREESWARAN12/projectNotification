@@ -5,21 +5,19 @@ import com.devMinds.projectNotification.Dto.TaskDTO;
 import com.devMinds.projectNotification.Service.ApplicantService;
 import com.devMinds.projectNotification.Service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.core.AuthenticatedPrincipal;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
-import java.security.Principal;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/")
+@SessionAttributes("applicant")
 public class WebController {
     @Autowired
     private ApplicantService applicantService;
@@ -27,15 +25,18 @@ public class WebController {
     private TaskService taskService;
 
     @GetMapping("dashboard")
-    public String dashboard(Authentication principal, ModelMap modelMap) {
-        ApplicantDTO applicantDTO = applicantService.getApplicantDTO(principal.getName());
-        List<TaskDTO> taskDTOList = taskService.getTaskDto(principal.getName());
+    public String dashboard(OAuth2AuthenticationToken principal, ModelMap modelMap) {
+        if (Objects.isNull(principal)) {
+            modelMap.addAttribute("applicant", new ApplicantDTO.ApplicationDTOBuilder().username("User").build());
+            return "dashboard";
+        }
+        applicantService.createApplicant(principal);
+        ApplicantDTO applicantDTO =
+                applicantService.getApplicantDTO(principal.getPrincipal().getAttributes().get("email").toString());
+        List<TaskDTO> taskDTOList = taskService.getTaskDto(principal.getPrincipal().getAttributes().get("email").toString());
         modelMap.addAttribute("applicant", applicantDTO);
         modelMap.addAttribute("task", taskDTOList);
         return "dashboard";
     }
-    @GetMapping("/login")
-    public String login() {
-        return "login";
-    }
+
 }
