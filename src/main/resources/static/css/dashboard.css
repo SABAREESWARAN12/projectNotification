@@ -1,0 +1,46 @@
+body {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #ffffff;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Task List card */
+.task-card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 900px;
+    margin: auto;
+}
+
+/* Table */
+.table {
+    background: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table thead {
+    background-color: #343a40;
+    color: white;
+}
+
+.table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Status badge styling */
+.status-completed {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.status-progress {
+    color: #ffc107;
+    font-weight: bold;
+}
+
+.status-pending {
+    color: #dc3545;
+    font-weight: bold;
+}
