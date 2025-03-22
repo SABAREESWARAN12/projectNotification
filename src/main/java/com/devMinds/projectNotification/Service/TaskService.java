@@ -4,10 +4,7 @@ import com.devMinds.projectNotification.Dto.TaskDTO;
 import com.devMinds.projectNotification.Entity.Applicant;
 import com.devMinds.projectNotification.Entity.Task;
 import com.devMinds.projectNotification.Repository.ApplicantRepository;
-import com.devMinds.projectNotification.Repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
