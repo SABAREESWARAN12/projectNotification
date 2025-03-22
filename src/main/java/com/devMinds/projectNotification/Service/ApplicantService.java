@@ -4,11 +4,7 @@ import com.devMinds.projectNotification.Dto.ApplicantDTO;
 import com.devMinds.projectNotification.Entity.Applicant;
 import com.devMinds.projectNotification.Repository.ApplicantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
