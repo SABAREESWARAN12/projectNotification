@@ -14,13 +14,13 @@
         <h2>Task List</h2>
         <span class="badge bg-primary fs-5">Welcome, <span th:text="${applicant.username}"></span>!</span>
 
-        <span class="btn btn-danger" th:href="@{/logout}">Log Out</span>
+        <span class="btn btn-danger"><a href="/logout">Log Out</a></span>
     </div>
 
     <form id="taskForm" class="mb-4" >
         <div class="row">
             <div class="col-md-3">
-                <button type="submit" class="btn btn-success w-100">Add Task</button>
+                <a th:href="@{/Task/v1/createTask}" type="submit" class="btn btn-success w-100">Add Task</a>
             </div>
         </div>
     </form>
@@ -46,13 +46,10 @@
                         </span>
             </td>
             <td>
-                <a th:href="@{/tasks/edit/{id}(id=${task.taskName})}" class="btn btn-primary btn-sm">
+                <a th:href="@{'/Task/v1/editTask?id=' + ${task.taskName}}" class="btn btn-primary btn-sm">
                     Edit
                 </a>
-                <a th:href="@{/tasks/remove/{id}(id=${task.taskName})}" class="btn btn-danger btn-sm">
-                    Remove
-                </a>
-                <a th:href="@{/tasks/view/{id}(id=${task.taskName})}" class="btn btn-secondary btn-sm">
+                <a th:href="@{'/Task/v1/remove?id=' + ${task.taskName}}" class="btn btn-secondary btn-sm">
                     Remove
                 </a>
             </td>

@@ -7,44 +7,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ApplicantService {
     @Autowired
     private ApplicantRepository repository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
-    public ResponseEntity<String> createApplicant(Applicant applicant) {
-        Optional<Applicant> existingApplicant = repository.findById(applicant.getEmailId());
-        if (existingApplicant.isPresent()) {
-            throw new RuntimeException("Applicant already present");
-        }
-        applicant.setPassword(passwordEncoder.encode(applicant.getPassword()));
-        repository.save(applicant);
-        return new ResponseEntity<>(HttpStatusCode.valueOf(201));
-    }
-
-    public ResponseEntity<String> modifyApplicant(Applicant applicant) {
-        Optional<Applicant> existingApplicant = repository.findById(applicant.getEmailId());
+    public void createApplicant(OAuth2AuthenticationToken principle) {
+        Optional<Applicant> existingApplicant = repository.findById(principle.getPrincipal().getAttribute("email"));
         if (existingApplicant.isEmpty()) {
-            throw new RuntimeException("Something Went wrong");
+            repository.save(new Applicant.Builder().setName(principle.getPrincipal().getAttribute("name"))
+                    .setEmailId(principle.getPrincipal().getAttribute("email"))
+                    .setTaskList(List.of()).build());
         }
-        applicant.setPassword(passwordEncoder.encode(applicant.getPassword()));
-        repository.save(applicant);
-        return new ResponseEntity<>(HttpStatusCode.valueOf(202));
-    }
-
-    public ResponseEntity<String> deleteApplicant(String emailId) {
-        Optional<Applicant> existingApplicant = repository.findById(emailId);
-        if (existingApplicant.isEmpty()) {
-            throw new RuntimeException("Something Went wrong");
-        }
-        repository.delete(existingApplicant.get());
-        return new ResponseEntity<>(HttpStatusCode.valueOf(202));
     }
 
     public ApplicantDTO getApplicantDTO (String emailId) {

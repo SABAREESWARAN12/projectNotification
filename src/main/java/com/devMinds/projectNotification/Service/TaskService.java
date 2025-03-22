@@ -17,46 +17,44 @@ import java.util.stream.Collectors;
 @Service
 public class TaskService {
     @Autowired
-    private TaskRepository taskRepository;
-    @Autowired
     private ApplicantRepository applicantRepository;
 
-    public ResponseEntity<java.lang.String> createTask(Task task, String user) {
-        Optional<Task> existingTask = taskRepository.findById(task.getTaskId());
-        if (existingTask.isPresent()) {
-            throw new RuntimeException("Task Already Present");
-        } else {
-            taskRepository.save(task);
-            Optional<Applicant> applicant = applicantRepository.findById(user);
-            applicant.get().getTaskList().add(task);
-            applicantRepository.save(applicant.get());
 
-        }
-        return new ResponseEntity<>(HttpStatusCode.valueOf(201));
-    }
-    public ResponseEntity<java.lang.String> editTask(Task task, String user) {
-        Optional<Task> existingTask = taskRepository.findById(task.getTaskId());
-        if (existingTask.isEmpty()) {
-            throw new RuntimeException("Task not Present");
+    public void modifyTask(Task task, String user) {
+        Optional<Applicant> applicant = applicantRepository.findById(user);
+        List<Task> existingTaskList = applicant.get().getTaskList();
+        List<Task> exitingTask =
+                existingTaskList.stream().filter(r -> r.getTaskId().equals(task.getTaskId()))
+                        .collect(Collectors.toList());
+        if (exitingTask.isEmpty()) {
+            existingTaskList.add(task);
+            applicantRepository.save(applicant.get());
         } else {
-            taskRepository.save(task);
-            Optional<Applicant> applicant = applicantRepository.findById(user);
-            applicant.get().getTaskList().add(task);
+            existingTaskList.remove(exitingTask.get(0));
+            existingTaskList.add(task);
             applicantRepository.save(applicant.get());
         }
-        return new ResponseEntity<>(HttpStatusCode.valueOf(202));
     }
-    public ResponseEntity<java.lang.String> deleteTask(String id, String user) {
-        Optional<Task> existingTask = taskRepository.findById(id);
-        if (existingTask.isEmpty()) {
+
+
+
+    public Task getTaskById(String id, String user) {
+        Optional<Applicant> applicant = applicantRepository.findById(user);
+        List<Task> existingTaskList = applicant.get().getTaskList();
+        existingTaskList.stream().filter(r -> r.getTaskId().equals(id));
+        return !existingTaskList.isEmpty() ? existingTaskList.get(0) : null;
+    }
+
+    public void deleteTask(String id, String user) {
+        Optional<Applicant> applicant = applicantRepository.findById(user);
+        List<Task> existingTaskList = applicant.get().getTaskList();
+        existingTaskList.stream().filter(r -> r.getTaskId().equals(id));
+        if (existingTaskList.isEmpty()) {
             throw new RuntimeException("Task not Present");
         } else {
-            taskRepository.delete(existingTask.get());
-            Optional<Applicant> applicant = applicantRepository.findById(user);
-            applicant.get().getTaskList().remove(existingTask);
+            applicant.get().getTaskList().remove(existingTaskList.get(0));
             applicantRepository.save(applicant.get());
         }
-        return new ResponseEntity<>(HttpStatusCode.valueOf(202));
     }
 
     public List<TaskDTO> getTaskDto(String emailId) {
