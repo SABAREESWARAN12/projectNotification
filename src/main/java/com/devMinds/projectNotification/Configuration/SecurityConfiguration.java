@@ -15,7 +15,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf(r -> r.disable())
                 .authorizeHttpRequests(r ->r.anyRequest().authenticated())
-                .oauth2Login(Customizer.withDefaults())
+                .oauth2Login(r -> r.defaultSuccessUrl("/dashboard", true))
                 .logout(r -> r.logoutSuccessUrl("/dashboard"))
                 .securityContext(r -> r.securityContextRepository(new HttpSessionSecurityContextRepository()))
                 .build();
