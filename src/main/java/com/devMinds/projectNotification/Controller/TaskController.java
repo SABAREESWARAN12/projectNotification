@@ -4,6 +4,7 @@ import com.devMinds.projectNotification.Dto.TaskDTO;
 import com.devMinds.projectNotification.Entity.Task;
 import com.devMinds.projectNotification.Service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -40,6 +41,14 @@ public class TaskController {
         List<TaskDTO> taskDTOList = service.getTaskDto(token.getPrincipal().getAttributes().get("email").toString());
         modelMap.addAttribute("task", taskDTOList);
         return "redirect:/dashboard";
+    }
+
+    @GetMapping("details")
+    @ResponseBody
+    public ResponseEntity<Task> getTaskDetails(OAuth2AuthenticationToken token, @RequestParam String id, ModelMap modelMap) {
+        Task task = service.getTaskById(
+                id, token.getPrincipal().getAttribute("email"));
+        return ResponseEntity.ok(task);
     }
 
     @GetMapping("remove")

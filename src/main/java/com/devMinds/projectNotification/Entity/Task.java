@@ -2,6 +2,8 @@ package com.devMinds.projectNotification.Entity;
 
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import java.time.LocalDate;
+
 public class Task {
 
     @MongoId
