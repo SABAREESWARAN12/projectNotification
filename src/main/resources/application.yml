@@ -6,3 +6,23 @@ spring:
           google:
             clientId:
             clientSecret:
+
+  data:
+    mongodb:
+      database: localDb
+      username: local
+      password: local
+      host: localhost
+      port: 27107
+
+  project:
+    notification:
+      mail:
+        username:
+        password:
+        from:
+
+logging:
+  level:
+    root: INFO
+

@@ -38,8 +38,12 @@ public class TaskService {
     public Task getTaskById(String id, String user) {
         Optional<Applicant> applicant = applicantRepository.findById(user);
         List<Task> existingTaskList = applicant.get().getTaskList();
-        existingTaskList.stream().filter(r -> r.getTaskId().equals(id));
-        return !existingTaskList.isEmpty() ? existingTaskList.get(0) : null;
+        List<Task> filteredTask =
+                existingTaskList.stream().filter(r -> r.getTaskId().equals(id)).collect(Collectors.toList());
+        if (filteredTask.isEmpty()) {
+            return new Task();
+        }
+        return filteredTask.getFirst();
     }
 
     public void deleteTask(String id, String user) {
